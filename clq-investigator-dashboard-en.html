@@ -244,29 +244,45 @@
   </div>
 
   <script>
-	fetch("./clq_registry.csv")
-	  .then(res => res.text())
-	  .then(csvText => {
-		const rows = parseCsv(csvText);
+// ===============================
+// CSV LOAD (GitHub Pages)
+// ===============================
+let clqData = [];
+let currentView = [];
 
-		const enriched = rows.map((r, i) => {
-		  const risk = calcRisk3(r);
-		  return {
-			id: i + 1,
-			...r,
-			riskScore: risk.score,
-			riskLevel: risk.riskLevel,
-			triggerApplied: risk.triggerApplied,
-			breakdown: risk.breakdown
-		  };
-		});
+fetch("./clq_registry.csv?v=" + Date.now())
+  .then(res => {
+    if (!res.ok) throw new Error("CSV HTTP " + res.status);
+    return res.text();
+  })
+  .then(csvText => {
+    console.log("CSV loaded");
 
-		clqData = enriched;
-		currentView = [...clqData].sort((a,b)=>b.riskScore-a.riskScore);
-		renderSummary(currentView);
-		renderTablePaged(currentView);
-	  })
-	  .catch(err => console.error("CSV load error", err));
+    const rows = csvToObjects(csvText);
+
+    const enriched = rows.map((r, i) => {
+      const risk = calcRisk3(r);
+      return {
+        id: i + 1,
+        ...r,
+        riskScore: risk.score,
+        riskLevel: risk.riskLevel,
+        triggerApplied: risk.triggerApplied,
+        breakdown: risk.breakdown
+      };
+    });
+
+    clqData = enriched;
+    currentView = [...clqData].sort((a, b) => b.riskScore - a.riskScore);
+
+    renderSummary(currentView);
+    renderTablePaged(currentView);
+    resetDetail();
+  })
+  .catch(err => {
+    console.error("CSV load error:", err);
+    alert("CSV load error: " + err.message);
+  });
 
 // 2) CSV parser (handles quotes)
 function parseCsv(line) {
