@@ -347,35 +347,7 @@ function calcRisk3(row) {
 
 
 // 4) Build clqData from CSV (this replaces the hardcoded array)
-const clqData = csvToObjects(registryCsv).map((r, idx) => {
-  const { score, riskLevel,triggerApplied } = calcRisk3(r);
-
-return {
-  id: idx + 1,
-  name: r.clqName || "-",
-  employer: r.picName || "-",
-  state: r.state || "-",
-  complaints60d: Number(r.complaints60d || 0),
-  pastViolations: Number(r.pastViolations || 0),
-  daysSinceLastInspection: Number(r.daysSinceLastInspection || 0),
-  riskScore: score,
-  riskLevel: riskLevel,
-  triggerApplied: triggerApplied,
-  breakdown: [
-    `Complaints (60d): ${Number(r.complaints60d || 0)}`,
-    `Past violations: ${Number(r.pastViolations || 0)}`,
-    `Days since last inspection: ${Number(r.daysSinceLastInspection || 0)}`,
-	`Violation trigger applied: ${triggerApplied ? "Yes (" + triggerApplied + ")" : "No"}`
-  ],
-  signals: [],
-  recommendation: riskLevel === "High"
-    ? "Recommended to prioritise investigation within 30 days."
-    : riskLevel === "Medium"
-    ? "Monitor closely and schedule investigation if signals increase."
-    : "Low-risk profile. Continue routine monitoring."
-};
-});
-    
+ 
     function getRiskBadgeClass(level) {
       switch (level) {
         case "High":   return "bg-red-100 text-red-700";
