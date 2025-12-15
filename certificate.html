@@ -5,10 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Act 446 Compliance Certificate (Prototype)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+	 <style>
+		@media print {
+		  @page { size: A4; margin: 12mm; }
+
+		  /* Buang gap pelik */
+		  html, body { height: 100%; margin: 0 !important; padding: 0 !important; }
+
+		  /* Paksa sijil ikut tinggi printable area */
+		  #certificate {
+			height: calc(297mm - 24mm); /* A4 height - (top+bottom margin) */
+			width: calc(210mm - 24mm);  /* A4 width  - (left+right margin) */
+			margin: 0 auto;
+		  }
+
+		  /* Kalau content sikit, bagi dia “spread” */
+		  #certificate > * {
+			page-break-inside: avoid;
+		  }
+		  button {
+			display: none !important; /* sorok butang print */
+		  }		  
+		}
+	</style>
 </head>
 
 <body class="bg-gray-100 min-h-screen p-6">
   <div class="max-w-4xl mx-auto">
+    <div id="certificate" class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
     <!-- Certificate Sheet -->
     <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
       <!-- Top Bar -->
@@ -134,7 +158,8 @@
     </div>
 
     <!-- Controls (optional, for demo) -->
-    <div class="mt-4 text-xs text-gray-600">
+    </div>
+	<div class="mt-4 text-xs text-gray-600">
       Tip: You can pass values via URL like
       <span class="font-mono">?company=ABC%20SDN%20BHD&pac=PAC/123&issue=2025-12-15&from=2025-12-15&until=2028-12-14</span>
     </div>
@@ -213,5 +238,13 @@
       $("bcHash").textContent = hash;
     })();
   </script>
+  <!-- Print Button -->
+	<div class="mt-6 text-center">
+	  <button onclick="window.print()"
+		class="px-6 py-2 bg-amber-600 text-white rounded-lg shadow hover:bg-amber-700">
+		🖨️ Print Certificate
+	  </button>
+</div>
+
 </body>
 </html>
