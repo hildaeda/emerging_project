@@ -312,7 +312,7 @@ fetch(CSV_URL + "?v=" + Date.now())
 
       return {
         id: idx + 1,
-        name: (r.title || "-").trim(),
+        name: (r.clqName || "-").trim(),
         state: (r.state || "-").trim().toUpperCase(),
         complaints60d: Number(r.complaints60d || 0),
         pastViolations: Number(r.pastViolations || 0),
