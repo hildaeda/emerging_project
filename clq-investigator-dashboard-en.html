@@ -244,6 +244,33 @@
   </div>
 
   <script>
+	fetch("./clq_registry.csv")
+	  .then(res => res.text())
+	  .then(csvText => {
+		const rows = parseCsv(csvText);
+
+		const enriched = rows.map((r, i) => {
+		  const risk = calcRisk3(r);
+		  return {
+			id: i + 1,
+			...r,
+			riskScore: risk.score,
+			riskLevel: risk.riskLevel,
+			triggerApplied: risk.triggerApplied,
+			breakdown: risk.breakdown
+		  };
+		});
+
+		clqData = enriched;
+		currentView = [...clqData].sort((a,b)=>b.riskScore-a.riskScore);
+		renderSummary(currentView);
+		renderTablePaged(currentView);
+	  })
+	  .catch(err => console.error("CSV load error", err));
+  
+
+  
+  
     // Sample dataset (mock)
 // 1) Paste CSV here (replace content only)
 const registryCsv = `
