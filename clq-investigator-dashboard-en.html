@@ -306,27 +306,50 @@ fetch(CSV_URL + "?v=" + Date.now())
   .then(csvText => {
     const rows = csvToObjects(csvText);
 
-    const clqData = rows.map((r, idx) => {
+    // IMPORTANT: assign to GLOBAL clqData (jangan "const clqData" lagi)
+    clqData = rows.map((r, idx) => {
       const { score, riskLevel, triggerApplied } = calcRisk3(r);
 
       return {
         id: idx + 1,
-        name: r.title,
-        state: r.state,
+        name: (r.title || "-").trim(),
+        state: (r.state || "-").trim().toUpperCase(),
         complaints60d: Number(r.complaints60d || 0),
         pastViolations: Number(r.pastViolations || 0),
         daysSinceLastInspection: Number(r.daysSinceLastInspection || 0),
-        score,
+
+        // UI bawah awak guna "riskScore", bukan "score"
+        riskScore: score,
         riskLevel,
-        triggerApplied
+        triggerApplied,
+
+        breakdown: [
+          `Complaints (60d): ${Number(r.complaints60d || 0)}`,
+          `Past violations: ${Number(r.pastViolations || 0)}`,
+          `Days since last inspection: ${Number(r.daysSinceLastInspection || 0)}`,
+          `Violation trigger applied: ${triggerApplied ? "Yes (" + triggerApplied + ")" : "No"}`
+        ],
+        signals: [],
+        recommendation:
+          riskLevel === "High"
+            ? "Recommended to prioritise investigation within 30 days."
+            : riskLevel === "Medium"
+            ? "Monitor closely and schedule investigation if signals increase."
+            : "Low-risk profile. Continue routine monitoring."
       };
     });
 
-    renderDashboard(clqData); // <-- function awak
+    // Lepas data siap, barulah render
+    currentPage = 1;
+    currentView = [...clqData].sort((a, b) => b.riskScore - a.riskScore);
+
+    renderSummary(currentView);
+    renderTablePaged(currentView);
+    resetDetail();
   })
   .catch(err => {
-    console.error("CSV load error:", err);
-    alert("CSV load error");
+    console.error("CSV/JS error:", err);
+    alert("Error: " + err.message);
   });
 
 
@@ -508,7 +531,6 @@ function calcRisk3(row) {
       if (risk)  filtered = filtered.filter(c => c.riskLevel === risk);
 
       renderSummary(filtered);
-      renderTable(filtered);
       resetDetail();
 	  currentPage = 1;
 	  currentView = filtered.sort((a, b) => b.riskScore - a.riskScore);
