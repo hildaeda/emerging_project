@@ -296,9 +296,11 @@ function parseCsvLine(line) {
   return out;
 }
 
-fetch("./clq_registry.csv")
+const CSV_URL = "https://hildaeda.github.io/emerging_project/clq_registry.csv";
+
+fetch(CSV_URL + "?v=" + Date.now())
   .then(res => {
-    if (!res.ok) throw new Error("CSV not found");
+    if (!res.ok) throw new Error("CSV HTTP " + res.status);
     return res.text();
   })
   .then(csvText => {
