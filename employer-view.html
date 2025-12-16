@@ -7,6 +7,22 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+
+<script>
+  // ambil parameter dari URL
+  const params = new URLSearchParams(window.location.search);
+  const clqName = params.get("clqname");
+
+  // decode %20 jadi space
+  const decodedClqName = decodeURIComponent(clqName);
+
+  console.log(decodedClqName);
+
+  // contoh paparkan dalam HTML
+  document.getElementById("clq-name").textContent = decodedClqName;
+</script>
+
+
 <body class="bg-gray-100 min-h-screen">
   <!-- Header -->
   <header class="bg-white shadow">
@@ -39,7 +55,7 @@
     <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="bg-white rounded-xl shadow p-4">
         <p class="text-xs text-gray-500">CLQ Name</p>
-        <p class="text-base font-semibold text-gray-800" id="clqName">Universal Best Sdn Bhd (CLQ)</p>
+        <p class="text-base font-semibold text-gray-800" id="clqName"><h2 id="clq-name"></h2></p>
         <p class="mt-1 text-xs text-gray-500" id="clqAddress">Lot 3329, 3330 Jalan ...</p>
       </div>
 
