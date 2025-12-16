@@ -476,9 +476,9 @@ function calcRisk3(row) {
 		tr.innerHTML = `
 		  <td class="px-3 py-2 text-left text-gray-500">${rowNo}</td>
 		  <td class="px-3 py-2 text-left">
-			<p class="font-medium text-gray-800">${clq.name}</p>
+			<p class="font-medium text-gray-800"><a href ="employer-view.html?clqname=$${clq.name}">${clq.name}</a></p>
 		  </td>
-		  <td class="px-3 py-2 text-left text-gray-600">${clq.state}</td>
+		  <td class="px-3 py-2 text-left text-gray-600">{clq.state}</td>
 		  <td class="px-3 py-2 text-right font-semibold text-gray-800">${clq.riskScore}</td>
 		  <td class="px-3 py-2 text-center">
 			<span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold ${getRiskBadgeClass(clq.riskLevel)}">
