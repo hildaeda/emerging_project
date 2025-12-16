@@ -8,20 +8,6 @@
 </head>
 
 
-<script>
-  // ambil parameter dari URL
-  const params = new URLSearchParams(window.location.search);
-  const clqName = params.get("clqname");
-
-  // decode %20 jadi space
-  const decodedClqName = decodeURIComponent(clqName);
-
-  console.log(decodedClqName);
-
-  // contoh paparkan dalam HTML
-  document.getElementById("clq-name").textContent = decodedClqName;
-</script>
-
 
 <body class="bg-gray-100 min-h-screen">
   <!-- Header -->
@@ -210,6 +196,18 @@
     }
 
     renderChecklist();
+	  // ambil parameter dari URL
+	  const params = new URLSearchParams(window.location.search);
+	  const clqName = params.get("clqname");
+
+	  // decode %20 jadi space
+	  const decodedClqName = decodeURIComponent(clqName);
+
+	  console.log(decodedClqName);
+
+	  // contoh paparkan dalam HTML
+	  document.getElementById("clq-name").textContent = decodedClqName;
+
   </script>
 </body>
 </html>
